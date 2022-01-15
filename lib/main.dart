@@ -9,12 +9,10 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Random name generator',
-      home: RandomWords(),
-    );
-  }
+  Widget build(BuildContext context) => const MaterialApp(
+        title: 'Random name generator',
+        home: RandomWords(),
+      );
 }
 
 class RandomWords extends StatefulWidget {
@@ -26,12 +24,21 @@ class RandomWords extends StatefulWidget {
 
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _favorites = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18);
 
   // Create list tile
   Widget _buildRow(WordPair pair) {
+    final _inFavorites = _favorites.contains(pair);
+
     return ListTile(
       title: Text(pair.asPascalCase, style: _biggerFont),
+      trailing: Icon(
+        _inFavorites ? Icons.favorite : Icons.favorite_border,
+        color: _inFavorites ? Colors.red : null,
+        semanticLabel:
+            _inFavorites ? 'Remove from favorites' : 'Add to favorites',
+      ),
     );
   }
 
