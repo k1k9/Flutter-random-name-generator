@@ -9,12 +9,10 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Random name generator',
-      home: RandomWords(),
-    );
-  }
+  Widget build(BuildContext context) => const MaterialApp(
+        title: 'Random name generator',
+        home: RandomWords(),
+      );
 }
 
 class RandomWords extends StatefulWidget {
