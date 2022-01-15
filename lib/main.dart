@@ -9,8 +9,11 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
         title: 'Random name generator',
+        theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                backgroundColor: Colors.white, foregroundColor: Colors.black)),
         home: RandomWords(),
       );
 }
