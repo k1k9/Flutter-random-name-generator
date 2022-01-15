@@ -39,6 +39,15 @@ class _RandomWordsState extends State<RandomWords> {
         semanticLabel:
             _inFavorites ? 'Remove from favorites' : 'Add to favorites',
       ),
+      onTap: () {
+        setState(() {
+          if (_inFavorites) {
+            _favorites.remove(pair);
+          } else {
+            _favorites.add(pair);
+          }
+        });
+      },
     );
   }
 
