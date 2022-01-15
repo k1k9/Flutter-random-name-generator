@@ -9,8 +9,11 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
         title: 'Random name generator',
+        theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                backgroundColor: Colors.white, foregroundColor: Colors.black)),
         home: RandomWords(),
       );
 }
@@ -24,12 +27,56 @@ class RandomWords extends StatefulWidget {
 
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _favorites = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18);
+
+  // Change view to favorites names
+  void _pushFavorites() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          final tiles = _favorites.map((pair) {
+            return ListTile(title: Text(pair.asPascalCase, style: _biggerFont));
+          });
+
+          final divided = tiles.isNotEmpty
+              ? ListTile.divideTiles(tiles: tiles, context: context).toList()
+              : <Widget>[];
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Favorite names'),
+            ),
+            body: ListView(
+              children: divided,
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   // Create list tile
   Widget _buildRow(WordPair pair) {
+    final _inFavorites = _favorites.contains(pair);
+
     return ListTile(
       title: Text(pair.asPascalCase, style: _biggerFont),
+      trailing: Icon(
+        _inFavorites ? Icons.favorite : Icons.favorite_border,
+        color: _inFavorites ? Colors.red : null,
+        semanticLabel:
+            _inFavorites ? 'Remove from favorites' : 'Add to favorites',
+      ),
+      onTap: () {
+        setState(() {
+          if (_inFavorites) {
+            _favorites.remove(pair);
+          } else {
+            _favorites.add(pair);
+          }
+        });
+      },
     );
   }
 
@@ -57,6 +104,13 @@ class _RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Random name generator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _pushFavorites,
+            tooltip: 'Favorites names',
+          )
+        ],
       ),
       body: _buildSuggestions(),
     );
