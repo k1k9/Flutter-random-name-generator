@@ -27,6 +27,32 @@ class _RandomWordsState extends State<RandomWords> {
   final _favorites = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18);
 
+  // Change view to favorites names
+  void _pushFavorites() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          final tiles = _favorites.map((pair) {
+            return ListTile(title: Text(pair.asPascalCase, style: _biggerFont));
+          });
+
+          final divided = tiles.isNotEmpty
+              ? ListTile.divideTiles(tiles: tiles, context: context).toList()
+              : <Widget>[];
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Favorite names'),
+            ),
+            body: ListView(
+              children: divided,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   // Create list tile
   Widget _buildRow(WordPair pair) {
     final _inFavorites = _favorites.contains(pair);
@@ -75,6 +101,13 @@ class _RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Random name generator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _pushFavorites,
+            tooltip: 'Favorites names',
+          )
+        ],
       ),
       body: _buildSuggestions(),
     );
